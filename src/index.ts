@@ -2,15 +2,15 @@
 /* eslint-disable dot-notation */
 import * as dotenv from "dotenv";
 import { Pinecone, type PineconeRecord } from '@pinecone-database/pinecone';
-import { getEnv } from "utils/util.ts";
+import { getEnv, getUpsertCommandLineArguments} from "utils/util.ts";
 import cliProgress from "cli-progress";
 import { Document } from 'langchain/document';
 import * as dfd from "danfojs-node";
 import { embedder } from "embeddings.ts";
 import loadCSVFile from "utils/csvLoader.ts";
 import splitFile from "utils/fileSplitter.ts";
-import { chunkedUpsert } from './utils/chunkedUpsert.ts';
 import type { ArticleRecord } from "types.ts";
+import { chunkedUpsert } from './utils/chunkedUpsert.ts';
 
 dotenv.config();
 
@@ -19,6 +19,8 @@ const progressBar = new cliProgress.SingleBar({}, cliProgress.Presets.shades_cla
 // Index setup
 const indexName = getEnv("PINECONE_INDEX");
 const pinecone = new Pinecone();
+
+const { file } = getUpsertCommandLineArguments();
 
 async function getChunk(df: dfd.DataFrame, start: number, size: number): Promise<dfd.DataFrame> {
   // eslint-disable-next-line no-return-await
@@ -65,7 +67,7 @@ async function embedAndUpsert(dataFrame: dfd.DataFrame, chunkSize: number) {
 }
 
 try {
-  const fileParts = await splitFile("./data/all-the-news-2-1.csv", 500000);
+  const fileParts = await splitFile(file, 500000);
   const firstFile = fileParts[0];
 
   // For this example, we will use the first file part to create the index

@@ -5,6 +5,26 @@ const sliceIntoChunks = <T>(arr: T[], chunkSize: number) => Array.from({ length:
   arr.slice(i * chunkSize, (i + 1) * chunkSize)
 );
 
+const getUpsertCommandLineArguments = () => {
+  const argv = yargs(hideBin(process.argv))
+    .option("file", {
+      alias: "f",
+      type: "string",
+      description: "The query to search for",
+      demandOption: true,
+    })
+
+    .parseSync();
+
+  const { file } = argv;
+  if (!file) {
+    console.error("Please provide a file");
+    process.exit(1);
+  }
+
+  return { file };
+};
+
 const getQueryingCommandLineArguments = () => {
   const argv = yargs(hideBin(process.argv))
     .option("query", {
@@ -46,6 +66,7 @@ const validateEnvironmentVariables = () => {
 };
 
 export {
+  getUpsertCommandLineArguments,
   getQueryingCommandLineArguments,
   sliceIntoChunks,
   validateEnvironmentVariables
