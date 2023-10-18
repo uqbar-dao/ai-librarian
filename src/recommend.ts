@@ -27,14 +27,16 @@ await embedder.init("Xenova/all-MiniLM-L6-v2");
 const { query, section } = getQueryingCommandLineArguments();
 
 // We create a simulated user with an interest given a query and a specific section
-const queryEmbedding = await embedder.embed(query)
+const queryEmbedding = await embedder.embed(query);
+let filter = {};
+if (section) {
+    filter = { section: { "$eq": section } };
+}
 const queryResult = await index.query({
     vector: queryEmbedding.values,
     includeMetadata: true,
     includeValues: true,
-    filter: {
-      section: { "$eq": section }
-    },
+    filter,
     topK: 10
 });
 

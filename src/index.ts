@@ -74,10 +74,12 @@ try {
   clean.head().print();
 
   // Create the index if it doesn't already exist
-  const indexList = await pinecone.listIndexes();
-  if (indexList.indexOf({ name: indexName }) === -1) {
-    await pinecone.createIndex({ name: indexName, dimension: 384, waitUntilReady: true })
-  }
+  // idk why but this section doesn't work at all - just create the index manually
+  // const indexList = await pinecone.listIndexes();
+  // if (indexList.indexOf({ name: indexName }) === -1) {
+  //   console.log("here");
+  //   await pinecone.createIndex({ name: indexName, dimension: 384, waitUntilReady: true, metric: "cosine" });
+  // }
 
   progressBar.start(clean.shape[0], 0);
   await embedder.init("Xenova/all-MiniLM-L6-v2");

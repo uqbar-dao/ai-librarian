@@ -17,7 +17,7 @@ const getQueryingCommandLineArguments = () => {
       alias: "s",
       type: "string",
       description: "The section of the article",
-      demandOption: true,
+      demandOption: false,
     })
 
     .parseSync();
