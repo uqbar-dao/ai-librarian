@@ -27,6 +27,12 @@ const getUpsertCommandLineArguments = () => {
 
 const getQueryingCommandLineArguments = () => {
   const argv = yargs(hideBin(process.argv))
+    .option("user", {
+      alias: "u",
+      type: "string",
+      description: "The user to search for",
+      demandOption: true,
+    })
     .option("query", {
       alias: "q",
       type: "string",
@@ -42,13 +48,17 @@ const getQueryingCommandLineArguments = () => {
 
     .parseSync();
 
-  const { query, section } = argv;
+  const { user, query, section } = argv;
+  if (!user) {
+    console.error("Please provide a user");
+    process.exit(1);
+  }
   if (!query) {
     console.error("Please provide a query");
     process.exit(1);
   }
 
-  return { query, section };
+  return { user, query, section };
 };
 
 const getScoreCommandLineArguments = () => {

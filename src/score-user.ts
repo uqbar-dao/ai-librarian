@@ -6,6 +6,7 @@ import type { PineconeRecord } from "@pinecone-database/pinecone";
 import type { ArticleRecord } from "types.ts";
 import fs from "fs";
 import loadCSVFile from "utils/csvLoader.ts";
+import meanVector from "utils/mean.ts";
 
 await embedder.init("Xenova/all-MiniLM-L6-v2");
 
@@ -28,15 +29,6 @@ const toEmbed = documents.map(record => new Document({
     }
   })
 );
-
-const mean = (arr: number[]): number => arr.reduce((a, b) => a + b, 0) / arr.length;
-const meanVector = (vectors: number[][]): number[] => {
-  const { length } = vectors[0];
-
-  return Array.from({ length }).map((_, i) =>
-    mean(vectors.map(vec => vec[i]))
-  );
-};
 
 // embed the user's preferences and save them to a file
 await embedder.embedBatch(toEmbed, 1000, (embeddings: PineconeRecord[]) => {
