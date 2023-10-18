@@ -11,6 +11,8 @@
     "tsup": "tsup",
     "build": "tsup",
     "index": "tsx -r dotenv/config src/index.ts",
+    "gen-user": "tsx -r dotenv/config src/gen-user.ts",
+    "score-user": "tsx -r dotenv/config src/score-user.ts",
     "recommend": "tsx -r dotenv/config src/recommend.ts",
     "lint": "eslint src",
     "lint:fix": "npm run lint --fix",

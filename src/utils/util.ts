@@ -51,6 +51,26 @@ const getQueryingCommandLineArguments = () => {
   return { query, section };
 };
 
+const getScoreCommandLineArguments = () => {
+    const argv = yargs(hideBin(process.argv))
+      .option("user", {
+        alias: "q",
+        type: "string",
+        description: "The user to score",
+        demandOption: true,
+      })
+  
+      .parseSync();
+  
+    const { user } = argv;
+    if (!user) {
+      console.error("Please provide a user");
+      process.exit(1);
+    }
+  
+    return { user };
+  };
+
 export const getEnv = (key: string): string => {
   const value = process.env[key];
   if (!value) {
@@ -66,6 +86,7 @@ const validateEnvironmentVariables = () => {
 };
 
 export {
+  getScoreCommandLineArguments,
   getUpsertCommandLineArguments,
   getQueryingCommandLineArguments,
   sliceIntoChunks,
