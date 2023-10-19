@@ -28,10 +28,15 @@ await embedder.init("Xenova/all-MiniLM-L6-v2");
 const { user, query, section } = getQueryingCommandLineArguments();
 
 // We create a simulated user with an interest given a query and a specific section
-const meanUserVec = JSON.parse(fs.readFileSync(`users/${user}.json`, "utf8")) as number[];
+let combinedEmbedding: number[];
 const queryEmbedding = await embedder.embed(query);
-const boostedQueryEmbedding = queryEmbedding.values.map(v => v * 10);
-const combinedEmbedding = meanVector([meanUserVec, boostedQueryEmbedding]); // TODO might need to weight
+if (user) {
+  const meanUserVec = JSON.parse(fs.readFileSync(`users/${user}.json`, "utf8")) as number[];
+  const boostedQueryEmbedding = queryEmbedding.values.map(v => v * 2); // TODO play with this x2 weighting
+  combinedEmbedding = meanVector([meanUserVec, boostedQueryEmbedding]);
+} else {
+  combinedEmbedding = queryEmbedding.values;
+}
 
 const recommendations = await index.query({
     vector: combinedEmbedding,

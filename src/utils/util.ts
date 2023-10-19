@@ -31,7 +31,7 @@ const getQueryingCommandLineArguments = () => {
       alias: "u",
       type: "string",
       description: "The user to search for",
-      demandOption: true,
+      demandOption: false,
     })
     .option("query", {
       alias: "q",
@@ -49,10 +49,6 @@ const getQueryingCommandLineArguments = () => {
     .parseSync();
 
   const { user, query, section } = argv;
-  if (!user) {
-    console.error("Please provide a user");
-    process.exit(1);
-  }
   if (!query) {
     console.error("Please provide a query");
     process.exit(1);
