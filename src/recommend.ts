@@ -17,7 +17,7 @@ try {
     throw `Index not ready, description was ${JSON.stringify(description)}`
   }
 } catch (e) {
-  console.log('An error occurred. Run "npm run index" to load data into the index before querying.')
+  console.log('An error occurred. Run "npm run index" to load data into the index before querying.');
   throw e;
 }
 
@@ -30,8 +30,8 @@ const { user, query, section } = getQueryingCommandLineArguments();
 // We create a simulated user with an interest given a query and a specific section
 const meanUserVec = JSON.parse(fs.readFileSync(`users/${user}.json`, "utf8")) as number[];
 const queryEmbedding = await embedder.embed(query);
-const combinedEmbedding = meanVector([meanUserVec, queryEmbedding.values]); // TODO might need to weight
-// const combinedEmbedding = JSON.parse(fs.readFileSync(`users/${user}.json`, "utf8")) as number[];
+const boostedQueryEmbedding = queryEmbedding.values.map(v => v * 10);
+const combinedEmbedding = meanVector([meanUserVec, boostedQueryEmbedding]); // TODO might need to weight
 
 const recommendations = await index.query({
     vector: combinedEmbedding,
