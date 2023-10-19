@@ -20,11 +20,8 @@ const documents = dfd.toJSON(clean) as ArticleRecord[];
 const toEmbed = documents.map(record => new Document({
     pageContent: record.article as string,
     metadata: {
-      section: record.section,
-      url: record.url,
-      title: record.title,
-      publication: record.publication,
-      author: record.author,
+      file: record.file,
+      node: record.node,
       article: record.article
     }
   })

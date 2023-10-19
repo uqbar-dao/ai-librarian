@@ -50,10 +50,10 @@ async function* processInChunks<T, M extends keyof T, P extends keyof T>(
 }
 
 async function embedAndUpsert(dataFrame: dfd.DataFrame, chunkSize: number) {
-  const chunkGenerator = processInChunks<ArticleRecord, 'section' | 'url' | 'title' | 'publication' | 'author' | 'article', 'article'>(
+  const chunkGenerator = processInChunks<ArticleRecord, 'article' | 'file' | 'node', 'article'>(
     dataFrame,
     100,
-    ['section', 'url', 'title', 'publication', 'author', 'article'],
+    ['article', 'file', 'node'],
     'article'
   );
   const index = pinecone.index(indexName);
@@ -67,7 +67,7 @@ async function embedAndUpsert(dataFrame: dfd.DataFrame, chunkSize: number) {
 }
 
 try {
-  const fileParts = await splitFile(file, 500000);
+  const fileParts = await splitFile(file, 500);
   const firstFile = fileParts[0];
 
   // For this example, we will use the first file part to create the index
@@ -88,7 +88,6 @@ try {
   await embedAndUpsert(clean, 1);
   progressBar.stop();
   console.log(`Inserted ${progressBar.getTotal()} documents into index ${indexName}`);
-
 } catch (error) {
   console.error(error);
 }

@@ -25,7 +25,7 @@ const index = pinecone.index<ArticleRecord>(indexName).namespace('default');
 
 await embedder.init("Xenova/all-MiniLM-L6-v2");
 
-const { user, query, section } = getQueryingCommandLineArguments();
+const { user, query } = getQueryingCommandLineArguments();
 
 // We create a simulated user with an interest given a query and a specific section
 const meanUserVec = JSON.parse(fs.readFileSync(`users/${user}.json`, "utf8")) as number[];
@@ -37,25 +37,25 @@ const recommendations = await index.query({
     vector: combinedEmbedding,
     includeMetadata: true,
     includeValues: true,
-    filter: section ?  { section: { "$eq": section } } : {},
+    filter: {}, // TODO maybe some kind of filtering like this: section ?  { section: { "$eq": section } } : {},
     topK: 10
 });
 
 const userRecommendations = new Table({
   columns: [
-    { name: "title", alignment: "left" },
-    { name: "author", alignment: "left" },
-    { name: "section", alignment: "left" },
+    { name: "file", alignment: "left" },
+    { name: "node", alignment: "left" },
+    { name: "article", alignment: "left" },
   ]
 });
 
 recommendations?.matches?.slice(0, 10).forEach((result: any) => {
-  const { title, article, publication, section } = result.metadata;
+  const { file, node, article } = result.metadata;
   userRecommendations.addRow({
-    title,
+    file,
+    node,
     article: `${article.slice(0, 70)}...`,
-    publication,
-    section
+
   });
 });
 console.log("=========== Recommendations ==========");

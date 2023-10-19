@@ -43,13 +43,8 @@ const userPreferences = queryResult.matches!.map(article => article.metadata);
 
 const csvData = userPreferences.map((record) => {
   if (record === undefined) return '';
-  const { index, title, article, publication, url, author, section } = record;
-  const date = new Date().toISOString().split('T')[0];
-  const year = new Date().getFullYear();
-  const month = new Date().getMonth() + 1;
-  const day = new Date().getDate();
-
-  return `${date},${year},${month},${day},"${author}","${title}","${article}","${url}","${section}","${publication}"`;
+  const { article, file, node } = record;
+  return `"${article}","${file}",${node}`;
 }).join('\n');
 
 const header = "date,year,month,day,author,title,article,url,section,publication";

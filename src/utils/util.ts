@@ -39,12 +39,6 @@ const getQueryingCommandLineArguments = () => {
       description: "The query to search for",
       demandOption: true,
     })
-    .option("section", {
-      alias: "s",
-      type: "string",
-      description: "The section of the article",
-      demandOption: false,
-    })
 
     .parseSync();
 
